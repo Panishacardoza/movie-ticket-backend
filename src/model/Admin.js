@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const adminSchma = new mongoose.Schema({
   email: {
@@ -13,9 +13,9 @@ const adminSchma = new mongoose.Schema({
   addedMovies: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "Movie",
+      ref: 'Movie',
     },
   ],
-});
+})
 
-export default mongoose.model("Admin", adminSchma);
+export default mongoose.model('Admin', adminSchma)

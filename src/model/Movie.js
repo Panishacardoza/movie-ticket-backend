@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const movieSchema = new mongoose.Schema({
   title: {
@@ -24,14 +24,14 @@ const movieSchema = new mongoose.Schema({
   bookings: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "Booking",
+      ref: 'Booking',
     },
   ],
   admin: {
     type: mongoose.Types.ObjectId,
-    ref: "Admin",
+    ref: 'Admin',
     required: true,
   },
-});
+})
 
-export default mongoose.model("Movie", movieSchema);
+export default mongoose.model('Movie', movieSchema)

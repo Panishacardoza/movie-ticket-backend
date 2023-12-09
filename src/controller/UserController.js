@@ -1,164 +1,162 @@
-import Bookings from "../model/Bookings";
-import User from "../model/User";
-import bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs'
+import Bookings from '../model/Bookings'
+import User from '../model/User'
 
 // localhost:5000/user
 export const getAllUsers = async (req, res, next) => {
-  let users;
+  let users
   try {
-    users = await User.find();
+    users = await User.find()
   } catch (err) {
-    return console.log(err);
+    return console.log(err)
   }
 
   if (!users) {
-    return res.status(500).json({ message: "Unexpected Error Occured" });
+    return res.status(500).json({ message: 'Unexpected Error Occured' })
   }
-  return res.status(200).json({ users });
-};
+  return res.status(200).json({ users })
+}
 
 // localhost:5000/user/signup
 export const singUp = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password } = req.body
   if (
     !name &&
-    name.trim() === "" &&
+    name.trim() === '' &&
     !email &&
-    email.trim() === "" &&
+    email.trim() === '' &&
     !password &&
-    password.trim() === ""
+    password.trim() === ''
   ) {
-    return res.status(422).json({ message: "Invalid Inputs" });
+    return res.status(422).json({ message: 'Invalid Inputs' })
   }
 
-  const hashedPassword = bcrypt.hashSync(password);
+  const hashedPassword = bcrypt.hashSync(password)
 
-  let user;
+  let user
   try {
-    user = new User({ name, email, password: hashedPassword });
-    user = await user.save();
+    user = new User({ name, email, password: hashedPassword })
+    user = await user.save()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
 
   if (!user) {
-    return res.status(500).json({ message: "Unexpected Error Occured" });
+    return res.status(500).json({ message: 'Unexpected Error Occured' })
   }
-  return res.status(201).json({ id: user._id });
-};
+  return res.status(201).json({ id: user._id })
+}
 
 // localhost:5000/user/:id
 export const updateUser = async (req, res, next) => {
-  const id = req.params.id;
-  const { name, email, password } = req.body;
+  const { id } = req.params
+  const { name, email, password } = req.body
   if (
     !name &&
-    name.trim() === "" &&
+    name.trim() === '' &&
     !email &&
-    email.trim() === "" &&
+    email.trim() === '' &&
     !password &&
-    password.trim() === ""
+    password.trim() === ''
   ) {
-    return res.status(422).json({ message: "Invalid Inputs" });
+    return res.status(422).json({ message: 'Invalid Inputs' })
   }
 
-  const hashedPassword = bcrypt.hashSync(password);
-  let user;
+  const hashedPassword = bcrypt.hashSync(password)
+  let user
   try {
     user = await User.findByIdAndUpdate(id, {
       name,
       email,
       password: hashedPassword,
-    });
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
   if (!user) {
-    return res.status(500).json({ message: "Something wewnt wrong" });
+    return res.status(500).json({ message: 'Something wewnt wrong' })
   }
 
-  res.status(200).json({ message: "Update Sucessfully" });
-};
+  res.status(200).json({ message: 'Update Sucessfully' })
+}
 
 // localhost:5000/user/:id
 export const deleteUser = async (req, res, next) => {
-  const id = req.params.id;
-  let user;
+  const { id } = req.params
+  let user
   try {
-    user = await User.findByIdAndDelete(id);
+    user = await User.findByIdAndDelete(id)
   } catch (err) {
-    return console.log(err);
+    return console.log(err)
   }
 
   if (!user) {
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ message: 'Something went wrong' })
   }
 
-  return res.status(200).json({ message: "Deleted Sucessfully" });
-};
+  return res.status(200).json({ message: 'Deleted Sucessfully' })
+}
 
 // localhost:5000/user/login/
 export const loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email && email.trim() === "" && !password && password.trim() === "") {
-    return res.status(422).json({ message: "Invalid Inputs" });
+  const { email, password } = req.body
+  if (!email && email.trim() === '' && !password && password.trim() === '') {
+    return res.status(422).json({ message: 'Invalid Inputs' })
   }
 
-  let existingUser;
+  let existingUser
 
   try {
-    existingUser = await User.findOne({ email });
+    existingUser = await User.findOne({ email })
   } catch (error) {
-    return console.log(err);
+    return console.log(err)
   }
 
   // validate existing user
   if (!existingUser) {
-    return res
-      .status(404)
-      .json({ message: "Unable to find user from this ID" });
+    return res.status(404).json({ message: 'Unable to find user from this ID' })
   }
 
-  const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password);
+  const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password)
 
   if (!isPasswordCorrect) {
-    return res.status(400).json({ message: "Incorrect Password" });
+    return res.status(400).json({ message: 'Incorrect Password' })
   }
 
-  return res.status(200).json({ message: "Login Sucessful", id: existingUser._id});
-};
+  return res
+    .status(200)
+    .json({ message: 'Login Sucessful', id: existingUser._id })
+}
 
 export const getBookingOfUser = async (req, res, next) => {
-  const id = req.params.id;
-  let booking;
+  const { id } = req.params
+  let booking
 
   try {
-    booking = await Bookings.find({ user: id });
+    booking = await Bookings.find({ user: id })
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
 
   if (!booking) {
-    return res.status(500).json({ message: "Unable to get Bookings" });
+    return res.status(500).json({ message: 'Unable to get Bookings' })
   }
 
-  return res.status(200).json({ booking });
-};
-
+  return res.status(200).json({ booking })
+}
 
 export const getUserById = async (req, res, next) => {
-  const id = req.params.id;
-  let user;
+  const { id } = req.params
+  let user
   try {
-    user = await User.findById(id);
-  } catch(err) {
+    user = await User.findById(id)
+  } catch (err) {
     return console.log(err)
   }
 
-  if(!user) {
-    return res.status(500).json({message: "Unexpected Error Occured"})
+  if (!user) {
+    return res.status(500).json({ message: 'Unexpected Error Occured' })
   }
 
-  return res.status(200).json({user})
+  return res.status(200).json({ user })
 }
-

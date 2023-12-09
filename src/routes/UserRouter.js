@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express'
 import {
   deleteUser,
   getAllUsers,
@@ -7,22 +7,22 @@ import {
   singUp,
   getUserById,
   updateUser,
-} from "../controller/UserController";
+} from '../controller/UserController'
 
-const userRouter = express.Router();
+const userRouter = express.Router()
 // loalhost:5000/user/
-userRouter.get("/", getAllUsers);
+userRouter.get('/', getAllUsers)
 // localhost:5000/:id
-userRouter.get("/:id", getUserById);
+userRouter.get('/:id', getUserById)
 // loalhost:5000/user/signup
-userRouter.post("/signup", singUp);
+userRouter.post('/signup', singUp)
 // loalhost:5000/user/:id
-userRouter.put("/:id", updateUser);
+userRouter.put('/:id', updateUser)
 // loalhost:5000/user/:id
-userRouter.delete("/:id", deleteUser);
+userRouter.delete('/:id', deleteUser)
 // localhost:5000/user/login
-userRouter.post("/login", loginUser);
+userRouter.post('/login', loginUser)
 // localhost:5000/user/bookings/:id
-userRouter.get("/bookings/:id", getBookingOfUser);
+userRouter.get('/bookings/:id', getBookingOfUser)
 
-export default userRouter;
+export default userRouter

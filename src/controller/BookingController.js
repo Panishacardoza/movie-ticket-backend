@@ -1,30 +1,32 @@
-import mongoose from "mongoose";
-import Bookings from "../model/Bookings";
-import Movie from "../model/Movie";
-import User from "../model/User";
+/* eslint-disable no-console */
+import mongoose from 'mongoose'
+import Bookings from '../model/Bookings'
+import Movie from '../model/Movie'
+import User from '../model/User'
 
-export const newBooking = async (req, res, next) => {
-  const { movie, date, seatNumber, user } = req.body;
+export const newBooking = async (req, res) => {
+  const { movie, date, seatNumber, user } = req.body
 
-  let existingMovie;
-  let existingUser;
+  let existingMovie
+  let existingUser
 
   try {
-    existingMovie = await Movie.findById(movie);
-    existingUser = await User.findById(user);
+    existingMovie = await Movie.findById(movie)
+    existingUser = await User.findById(user)
   } catch (err) {
-    return console.log(err);
+    // eslint-disable-next-line no-console
+    return console.log(err)
   }
 
   if (!existingMovie) {
-    return res.status(404).json({ message: "Movie Not Found with Given ID" });
+    return res.status(404).json({ message: 'Movie Not Found with Given ID' })
   }
 
   if (!existingUser) {
-    return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ message: 'User not found' })
   }
 
-  let booking;
+  let booking
 
   try {
     booking = new Bookings({
@@ -32,56 +34,58 @@ export const newBooking = async (req, res, next) => {
       date: new Date(`${date}`),
       seatNumber,
       user,
-    });
+    })
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    existingUser.bookings.push();
-    existingUser.bookings.push();
-    await existingUser.save({ session });
-    await existingMovie.save({ session });
-    await booking.save({ session });
-    session.commitTransaction();
+    const session = await mongoose.startSession()
+    session.startTransaction()
+    existingUser.bookings.push()
+    existingUser.bookings.push()
+    await existingUser.save({ session })
+    await existingMovie.save({ session })
+    await booking.save({ session })
+    session.commitTransaction()
   } catch (err) {
-    return console.log(err);
+    // eslint-disable-next-line no-console
+    return console.log(err)
   }
 
   if (!booking) {
-    return res.status(500).json({ message: "Unable to create a booking" });
+    return res.status(500).json({ message: 'Unable to create a booking' })
   }
 
-  return res.status(201).json({ booking });
-};
+  return res.status(201).json({ booking })
+}
 
-export const getBookingById = async (req, res, next) => {
-  const id = req.params.id;
-  let booking;
+export const getBookingById = async (req, res) => {
+  const { id } = req.params
+  let booking
 
   try {
-    booking = await Bookings.findById(id);
+    booking = await Bookings.findById(id)
   } catch (err) {
-    return console.log(err);
+    return console.log(err)
   }
 
   if (!booking) {
-    return res.status(500).json({ message: "Unexpected Error" });
+    return res.status(500).json({ message: 'Unexpected Error' })
   }
-  return res.status().json({ booking });
-};
+  return res.status().json({ booking })
+}
 
+// eslint-disable-next-line no-unused-vars
 export const deleteBooking = async (req, res, next) => {
-  const id = req.params.id;
-  let booking;
+  const { id } = req.params
+  let booking
   try {
-    booking = await Bookings.findByIdAndDelete(id).populate("user movie");
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    await booking.user.bookings.pull(booking);
-    await booking.movie.booking.pull(booking);
-    await booking.movie.save({ session });
-    await booking.user.save({ session });
-    session.commitTransaction();
+    booking = await Bookings.findByIdAndDelete(id).populate('user movie')
+    const session = await mongoose.startSession()
+    session.startTransaction()
+    await booking.user.bookings.pull(booking)
+    await booking.movie.booking.pull(booking)
+    await booking.movie.save({ session })
+    await booking.user.save({ session })
+    session.commitTransaction()
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}

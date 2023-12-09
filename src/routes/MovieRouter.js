@@ -1,18 +1,18 @@
-import express from "express";
+import express from 'express'
 import {
   getMovieById,
   addMovie,
   getMovies,
-} from "../controller/MovieController";
+} from '../controller/MovieController'
 
-const movieRouter = express.Router();
+const movieRouter = express.Router()
 
 // Routes
 // localhost:5000/movie
-movieRouter.get("/", getMovies);
+movieRouter.get('/', getMovies)
 // localhost:5000/movie
-movieRouter.post("/", addMovie);
+movieRouter.post('/', addMovie)
 // localhost:;5000/:id
-movieRouter.get("/:id", getMovieById);
+movieRouter.get('/:id', getMovieById)
 
-export default movieRouter;
+export default movieRouter
